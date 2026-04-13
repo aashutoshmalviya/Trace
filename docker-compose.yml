@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres-vector:
+    image: ankane/pgvector:latest
+    container_name: trace-db
+    environment:
+      POSTGRES_DB: trace_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgvector-data:/var/lib/postgresql/data
+    networks:
+      - trace-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d trace"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgvector-data:
+networks:
+  trace-network:

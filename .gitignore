@@ -1,0 +1,59 @@
+# --- Build & Maven ---
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.nextVersionsBackup
+release.properties
+.mvn/timing.properties
+
+.mvn/wrapper/maven-wrapper.jar
+
+
+
+google-cloud-cli-darwin-arm.tar.gz
+google-cloud-sdk/
+
+# --- Java & Logs ---
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+spring.log
+
+# --- IDEs (IntelliJ, VS Code, NetBeans) ---
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+.nb-gradle/
+
+# --- Operating Systems ---
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Security & Environment (CRITICAL) ---
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.p12
+*.jks
+
+postgres-data/
+
+
+temp/
+tmp/

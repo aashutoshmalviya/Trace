@@ -1,0 +1,9 @@
+* text=auto
+
+# Explicitly ensure Windows batch files use CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Explicitly ensure shell scripts use LF
+*.sh text eol=lf
+mvnw text eol=lf
