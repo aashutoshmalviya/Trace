@@ -1,0 +1,92 @@
+<div class="app-container">
+
+  <aside class="sidebar">
+    <div class="logo-area">
+      <h2>Trace<span class="dot">.</span>AI</h2>
+      <p class="subtitle">Architecture Co-Pilot</p>
+    </div>
+
+    <div class="project-section">
+      <div class="section-header">
+        <h3 style="text-align: center;">Active Projects</h3>
+        <button class="icon-btn add-btn" (click)="openModal()" title="Import Project">
+          +
+        </button>
+      </div>
+
+      <ul>
+       <ul>
+        <li *ngFor="let project of projects()" 
+            [class.active]="currentProject() === project"
+            (click)="selectProject(project)">
+          <span class="icon">📁</span> {{ project }}
+        </li>
+      </ul>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="chat-container">
+    @if (currentProject()) {
+    <header class="chat-header">
+      <span class="status-indicator"></span>
+      Analyzing <strong class="highlight">{{ currentProject() }}</strong>
+    </header>
+
+    <div class="messages-area" #scrollMe>
+      <div *ngFor="let msg of messages()" class="message-wrapper" [ngClass]="msg.sender">
+
+        <div class="avatar">
+          {{ msg.sender === 'trace' ? '🤖' : '👤' }}
+        </div>
+
+        <div class="message-content">
+          <ng-container *ngIf="msg.sender === 'user'; else traceMessage">
+            <p>{{ msg.text }}</p>
+          </ng-container>
+
+          <ng-template #traceMessage>
+            <markdown [data]="msg.text"></markdown>
+          </ng-template>
+        </div>
+      </div>
+
+      <div *ngIf="isLoading()" class="message-wrapper trace loading">
+        <div class="avatar">🤖</div>
+        <div class="message-content">
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+        </div>
+      </div>
+    </div>
+    } @else {
+    <div class="empty-state"
+      style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: #94a3b8;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">👋</div>
+      <h2 style="font-size: 1.5rem; color: #f8fafc; margin-bottom: 0.5rem;">Welcome to Trace.AI</h2>
+      <p>Select a project from the sidebar or import a new one to begin.</p>
+      <button (click)="openModal()"
+        style="margin-top: 1.5rem; background-color: #38bdf8; color: #fff; border: none; border-radius: 8px; padding: 0.6rem 1.2rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease;">
+        + Import Project
+      </button>
+    </div>
+    }
+
+    <div class="input-area">
+      <div class="input-wrapper">
+        <textarea placeholder="Ask about architecture, data flow, or specific classes..." [ngModel]="userQuery()"
+          (ngModelChange)="userQuery.set($event)" (keydown)="onKeydown($event)" rows="1"
+          [disabled]="!currentProject() || isLoading()"></textarea>
+        <button (click)="sendMessage()" [disabled]="!currentProject() || !userQuery().trim() || isLoading()">
+          Send
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+@if (isModalOpen()) {
+<app-import-modal (closeEvent)="closeModal()" (importSuccess)="handleSuccessfulImport($event)">
+</app-import-modal>
+}

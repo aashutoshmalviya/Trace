@@ -1,84 +1,56 @@
 # Trace 🚀
 
-> **AI-Powered Codebase Ingestion & Semantic Search**
-
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](#)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](#)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)](#)
-
-## 📖 Project Overview
-
-**Trace** is a sophisticated local codebase ingestion tool built with Spring Boot and Spring AI. It scans local directories for source code (specifically Java files), breaks the code into searchable chunks using a sliding window technique, and generates vector embeddings via the Google Gemini API. These embeddings are stored in a PostgreSQL database utilizing the `pgvector` extension, enabling powerful semantic search and context-aware interactions with your codebase.
+> **A Local, AI-Powered Architectural Co-Pilot for Your Codebase**
 
 ---
 
-## 🖼 Visuals
+## 📖 The "Why"
 
-_(Placeholder for an architectural diagram or screenshot of a semantic search query in action)_
+If you've ever tried to understand a sprawling, undocumented codebase by pasting 15 different files into ChatGPT, you know the pain of lost context and AI hallucinations.
 
----
-
-## 🛠 Tech Stack
-
-- **Primary Language:** Java
-- **Framework:** Spring Boot, Spring AI
-- **AI / LLM Integration:** Google GenAI (Gemini `gemini-3-flash-preview` for chat, `text-embedding-004` for vectors)
-- **Database:** PostgreSQL with `pgvector` extension
-- **Build Tool:** Maven
+**Trace** solves this. It is a local Retrieval-Augmented Generation (RAG) pipeline designed specifically for software architecture. Instead of isolated snippets, Trace ingests your entire repository into a local vector database. You can then ask complex, system-level questions (e.g., _"How does the Auth service validate JWTs, and which filters are involved?"_) and get highly accurate answers backed by direct code references.
 
 ---
 
-## 🛡️ Privacy & Model Extensibility
+## 🏗 System Architecture & Stack
 
-Thanks to **Spring AI**'s abstraction layer, Trace is highly flexible and not locked into a single AI provider:
+Trace is built with a modern, full-stack enterprise architecture, leveraging the Strategy Pattern for extensibility and Signals for bleeding-edge frontend performance.
 
-- **Complete Privacy:** You can swap out Gemini for **Ollama** to run open-source models (like Llama 3 or Mistral) entirely locally. This ensures your proprietary source code never leaves your machine!
-- **Enhanced Processing:** For handling massive codebases or needing deeper logical reasoning, you can easily integrate other industry-leading models like **OpenAI (GPT-4o)** or **Anthropic (Claude 3.5 Sonnet)**.
+- **Backend:** Java 17+, Spring Boot 3.4
+- **AI Orchestration:** Spring AI
+- **Database:** PostgreSQL + `pgvector` (Cosine Distance Indexing)
+- **LLM Engine:** Google Gemini 3 Flash (via GenAI SDK)
+- **Frontend:** Angular 20 (Fully Zoneless, Signal-based state management, SCSS)
+
+---
+
+## 🛡️ Privacy First: Bring Your Own Model
+
+Thanks to Spring AI's abstraction layer, Trace is not vendor-locked. While it defaults to Gemini for speed, you can easily swap the provider in your `application.yml`. Need strict enterprise privacy? Swap in **Ollama** to run Llama 3 or Mistral entirely locally—ensuring your proprietary source code never leaves your machine.
 
 ---
 
 ## ✨ Key Features
 
-- **Automated Code Discovery:** Recursively walks through target local directories to discover `.java` source files.
-- **Intelligent Chunking:** Uses `TokenTextSplitter` to break down large files into ~800-1000 token chunks for optimized LLM processing.
-- **Contextual Metadata:** Automatically injects rich metadata (project name, file path, and file name) into each document so the LLM knows precisely where the code lives.
-- **Vectorization & Storage:** Automatically generates embeddings using Gemini and persists them to PostgreSQL with Cosine Distance vector indexing.
-- **Resiliency:** Built-in retry mechanisms for the AI API calls (excluding client-side 4xx errors).
+- **Automated Code Discovery:** Recursively walks local directories to parse `.java` files (with more languages planned).
+- **Intelligent Chunking:** Utilizes a sliding-window token splitter (~800-1000 tokens) to optimize context windows.
+- **Contextual Metadata:** Automatically binds project names, file paths, and origins to vectors, eliminating AI spatial confusion.
+- **Sleek IDE-Like UI:** A dark-mode, responsive web interface featuring real-time Markdown rendering and syntax-highlighted code blocks.
+- **Extensible Design:** Built on a strict `IngestionStrategy` interface, making it trivial to add new ingestion sources (like S3 or direct Git cloning) without touching core logic.
 
 ---
 
-## 📂 Project Structure
+## 🚀 5-Minute Quickstart
 
-```text
-Trace/
-├── src/main/
-│   ├── java/com/illusion/trace/
-│   │   └── strategy/
-│   │       ├── IngestionStrategy.java            # Interface for ingestion handlers
-│   │       └── LocalDirectoryIngestionStrategy.java # Core logic for parsing and chunking local Java files
-│   └── resources/
-│       └── application.yml                       # Application configuration (DB, Spring AI, Gemini)
-├── mvnw / mvnw.cmd                               # Maven wrappers for cross-platform builds
-└── HELP.md                                       # Default Spring Boot help documentation
-```
+### 1. Prerequisites
 
----
+- **Java 17+** & Maven
+- **Node.js (v18+)** & npm
+- **PostgreSQL** (running on port `5433`) with the `pgvector` extension installed.
 
-## 🚀 Getting Started
+### 2. Database Setup
 
-### Prerequisites
-
-Before running Trace, ensure you have the following installed and configured:
-
-- **Java JDK** (17 or higher recommended)
-- **PostgreSQL** running locally on port `5433`.
-- **pgvector** extension installed in your PostgreSQL instance.
-- A valid **Google Gemini API Key**.
-
-### Database Setup
-
-Ensure your PostgreSQL instance has a database named `trace_db` and `pgvector` enabled:
+Ensure your local Postgres instance has a database named `trace_db` and the vector extension enabled:
 
 ```sql
 CREATE DATABASE trace_db;
@@ -86,65 +58,58 @@ CREATE DATABASE trace_db;
 CREATE EXTENSION vector;
 ```
 
-### Installation
+### 3. Environment Variables
 
-1. Clone the repository and navigate into the directory:
-
-```bash
-git clone <repository-url> trace
-cd trace
-```
-
-2. Set the required environment variables:
+Provide your database credentials and API key to the environment:
 
 ```bash
 export DB_PASSWORD="your_postgres_password"
 export GEMINI_API_KEY="your_gemini_api_key"
 ```
 
-3. Run the application locally using the Maven wrapper:
+### 4. Boot up the Backend
+
+Clone the repository and spin up the Spring Boot server:
 
 ```bash
-# On Linux/macOS:
+git clone https://github.com/aashutoshmalviya/Trace.git
+cd Trace
+
+# Run the Spring Boot application (defaults to port 8080)
 ./mvnw spring-boot:run
-
-# On Windows:
-mvnw.cmd spring-boot:run
 ```
+
+### 5. Boot up the Frontend
+
+In a new terminal window, start the Angular UI:
+
+```bash
+cd trace-ui
+npm install
+npm start
+```
+
+Navigate to `http://localhost:4200` in your browser. Click the **"+"** icon in the sidebar to import your first local project directory and start chatting!
 
 ---
 
-## 💻 Usage
+## 🗺️ Engineering Backlog (What's Next)
 
-While the project is running, the underlying strategy can be invoked to ingest a directory. Here is an example of how the core logic interacts with a target directory:
+Trace is a living project. Here is what is coming down the pipeline:
 
-```java
-// Example of internal strategy invocation
-LocalDirectoryIngestionStrategy strategy = new LocalDirectoryIngestionStrategy(vectorStore);
-String result = strategy.ingest("/path/to/my/project/src", "My Awesome App");
-System.out.println(result);
-// Output: "Success! Ingested 42 files into 125 searchable chunks."
-```
-
-_(Note: If you have exposed this via a REST endpoint or CLI runner, you can invoke it via `curl` or standard input)._
-
----
-
-## 🗺️ Roadmap / Future Development
-
-As an evolving MVP, the following features are planned to make Trace even more powerful:
-
-- **Remote Repository Support:** Native integration to ingest directly from GitHub or GitLab without needing to clone projects locally.
-- **Intelligent AST Chunking:** Replacing basic token splitting with Abstract Syntax Tree (AST) parsing (e.g., Tree-sitter or JavaParser) to chunk code logically by methods and classes, reducing LLM hallucinations.
-- **Redis Vector Store:** Adding optional support for Redis as a vector database for ultra-low latency similarity searches alongside PostgreSQL.
-- **Interactive Web UI:** Developing a sleek, modern frontend (React/Next.js) to replace CLI/REST interactions with a rich chat interface featuring syntax highlighting and markdown support.
+- [ ] **Semantic AST Chunking:** Upgrading from basic token splitting to Abstract Syntax Tree (AST) parsing (via JavaParser/Tree-sitter) so the LLM receives logically sound blocks (entire methods/classes) rather than arbitrary text cuts.
+- [ ] **Direct GitHub/GitLab Ingestion:** Implementing a `GitIngestionStrategy` to bypass local paths—just paste a public repo URL into the UI and let the backend handle the cloning and vectorization.
+- [ ] **Redis Vector Store:** Adding optional support for Redis as an alternative to Postgres for ultra-low latency similarity searches at scale.
+- [ ] **Dockerization:** Wrapping the UI, API, and Database into a single `docker-compose.yml` for true 1-click zero-config local deployments.
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/amazing-feature`).
-3. Commit your changes (`git commit -m 'Add some amazing feature'`).
-4. Push to the branch (`git push origin feature/amazing-feature`).
-5. Open a Pull Request.
+Contributions, issues, and feature requests are welcome! If you're tackling something from the backlog, please open an issue first to discuss the implementation.
+
+1. **Fork the Project**
+2. **Create your Feature Branch** (`git checkout -b feature/AmazingFeature`)
+3. **Commit your Changes** (`git commit -m 'feat: Add some AmazingFeature'`)
+4. **Push to the Branch** (`git push origin feature/AmazingFeature`)
+5. **Open a Pull Request**

@@ -1,0 +1,161 @@
+// We need local variables since this file is isolated from app.scss
+$bg-dark: #0f111a;
+$bg-panel: #1e293b;
+$bg-input: #0f172a;
+$text-main: #f8fafc;
+$text-muted: #94a3b8;
+$accent-color: #38bdf8;
+$accent-hover: #0ea5e9;
+$border-color: #334155;
+
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(#000, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background-color: $bg-panel;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 20px 40px rgba(#000, 0.4);
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid $border-color;
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $text-main;
+      margin: 0;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: $text-muted;
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      &:hover { color: #ef4444; }
+    }
+  }
+
+  .modal-tabs {
+    display: flex;
+    border-bottom: 1px solid $border-color;
+    background-color: rgba($bg-dark, 0.5);
+
+    button {
+      flex: 1;
+      padding: 1rem;
+      background: transparent;
+      border: none;
+      color: $text-muted;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+
+      &.active {
+        color: $accent-color;
+        border-bottom-color: $accent-color;
+        background-color: rgba($accent-color, 0.05);
+      }
+      &:hover:not(.active) { color: $text-main; }
+    }
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+
+    .form-group {
+      margin-bottom: 1.25rem;
+
+      label {
+        display: block;
+        font-size: 0.85rem;
+        color: $text-muted;
+        margin-bottom: 0.5rem;
+      }
+
+      input {
+        width: 100%;
+        background-color: $bg-input;
+        border: 1px solid $border-color;
+        color: $text-main;
+        border-radius: 6px;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        transition: border-color 0.2s;
+
+        &:focus {
+          outline: none;
+          border-color: $accent-color;
+        }
+        &:disabled { opacity: 0.5; cursor: not-allowed; }
+      }
+
+      .hint {
+        display: block;
+        margin-top: 0.5rem;
+        color: #f59e0b; /* Amber warning */
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  .modal-footer {
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid $border-color;
+    background-color: rgba($bg-dark, 0.3);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    .btn {
+      padding: 0.6rem 1.25rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+
+      &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+      &.secondary {
+        background-color: transparent;
+        color: $text-muted;
+        border: 1px solid $border-color;
+        &:hover:not(:disabled) { background-color: rgba(255,255,255,0.05); color: $text-main; }
+      }
+
+      &.primary {
+        background-color: $accent-color;
+        color: #fff;
+        &:hover:not(:disabled) { background-color: $accent-hover; }
+      }
+    }
+  }
+}
+
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
